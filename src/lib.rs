@@ -21,18 +21,16 @@ pub fn spans_to_speedscope(spans: Vec<Span>) -> SpeedscopeFile {
     let mut frames = IndexSet::new();
     let profiles = spans
         .into_iter()
-        .map(|span| {
-            let mut events = Vec::new();
-            for child in span.children {
-                span_extend_events(&mut frames, &mut events, child);
-            }
-            Profile::Evented {
-                name: span.name,
-                unit: ValueUnit::Nanoseconds,
-                start_value: span.start_ns,
-                end_value: span.end_ns,
-                events,
-            }
+        .map(|span| Profile::Evented {
+            name: span.name.clone(),
+            unit: ValueUnit::Nanoseconds,
+            start_value: span.start_ns,
+            end_value: span.end_ns,
+            events: {
+                let mut events = Vec::new();
+                span_extend_events(&mut frames, &mut events, span);
+                events
+            },
         })
         .collect();
     SpeedscopeFile {
