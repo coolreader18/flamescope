@@ -29,6 +29,7 @@
 type StrCow = std::borrow::Cow<'static, str>;
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct SpeedscopeFile {
     #[serde(rename = "$schema")]
     pub schema: &'static str,
@@ -36,7 +37,6 @@ pub struct SpeedscopeFile {
     pub profiles: Vec<Profile>,
     pub shared: Shared,
 
-    #[serde(rename = "activeProfileIndex")]
     pub active_profile_index: Option<u64>,
 
     pub exporter: Option<String>,
@@ -46,25 +46,22 @@ pub struct SpeedscopeFile {
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(tag = "type")]
+#[serde(rename_all = "camelCase")]
 pub enum Profile {
-    #[serde(rename = "sampled")]
+    #[serde(rename_all = "camelCase")]
     Sampled {
         name: StrCow,
         unit: ValueUnit,
-        #[serde(rename = "startValue")]
         start_value: u64,
-        #[serde(rename = "endValue")]
         end_value: u64,
         samples: Vec<SampledStack>,
         weights: Vec<u64>,
     },
-    #[serde(rename = "evented")]
+    #[serde(rename_all = "camelCase")]
     Evented {
         name: StrCow,
         unit: ValueUnit,
-        #[serde(rename = "startValue")]
         start_value: u64,
-        #[serde(rename = "endValue")]
         end_value: u64,
         events: Vec<Event>,
     },
@@ -114,17 +111,12 @@ impl Frame {
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
 pub enum ValueUnit {
-    #[serde(rename = "bytes")]
     Bytes,
-    #[serde(rename = "microseconds")]
     Microseconds,
-    #[serde(rename = "milliseconds")]
     Milliseconds,
-    #[serde(rename = "nanoseconds")]
     Nanoseconds,
-    #[serde(rename = "none")]
     None,
-    #[serde(rename = "seconds")]
     Seconds,
 }
