@@ -1,0 +1,58 @@
+---
+source: tests/snapshot.rs
+expression: actual
+
+---
+{
+  "$schema": "https://www.speedscope.app/file-format-schema.json",
+  "profiles": [
+    {
+      "type": "evented",
+      "name": "the main",
+      "unit": "nanoseconds",
+      "startValue": 50,
+      "endValue": 150,
+      "events": [
+        {
+          "type": "O",
+          "at": 100,
+          "frame": 0
+        },
+        {
+          "type": "O",
+          "at": 100,
+          "frame": 1
+        },
+        {
+          "type": "C",
+          "at": 100,
+          "frame": 1
+        },
+        {
+          "type": "C",
+          "at": 100,
+          "frame": 0
+        }
+      ]
+    }
+  ],
+  "shared": {
+    "frames": [
+      {
+        "name": "the main",
+        "file": null,
+        "line": null,
+        "col": null
+      },
+      {
+        "name": "foobar",
+        "file": null,
+        "line": null,
+        "col": null
+      }
+    ]
+  },
+  "activeProfileIndex": null,
+  "exporter": null,
+  "name": null
+}

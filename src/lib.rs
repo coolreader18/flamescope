@@ -16,6 +16,8 @@ use indexmap::IndexSet;
 use model::*;
 use std::io::Write;
 
+const JSON_SCHEMA_URL: &str = "https://www.speedscope.app/file-format-schema.json";
+
 /// Convert flame spans to the speedscope profile format.
 pub fn spans_to_speedscope(spans: Vec<Span>) -> SpeedscopeFile {
     let mut frames = IndexSet::new();
@@ -35,7 +37,7 @@ pub fn spans_to_speedscope(spans: Vec<Span>) -> SpeedscopeFile {
         .collect();
     SpeedscopeFile {
         // always the same
-        schema: "https://www.speedscope.app/file-format-schema.json",
+        schema: JSON_SCHEMA_URL,
         active_profile_index: None,
         exporter: None,
         name: None,
@@ -91,41 +93,4 @@ pub fn dump(writer: impl Write) -> serde_json::Result<()> {
 pub fn write_spans(writer: impl Write, spans: Vec<Span>) -> serde_json::Result<()> {
     let speedscope = spans_to_speedscope(spans);
     serde_json::to_writer(writer, &speedscope)
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test() {
-        {
-            let _guard = flame::start_guard("the main");
-            {
-                let _guard_two = flame::start_guard("foobar");
-            }
-        }
-        let actual = spans_to_speedscope(flame::spans());
-        match &actual.profiles[0] {
-            Profile::Evented { name, events, .. } => {
-                assert_eq!(name, "the main");
-                assert_eq!(events[0].frame, 0);
-                assert_eq!(events[0].event_type, EventType::OpenFrame);
-                assert_eq!(events[1].frame, 0);
-                assert_eq!(events[1].event_type, EventType::CloseFrame);
-            }
-            _ => unreachable!(),
-        }
-        assert_eq!(
-            actual.shared,
-            Shared {
-                frames: vec![Frame {
-                    name: "foobar".into(),
-                    file: None,
-                    line: None,
-                    col: None,
-                }]
-            }
-        );
-    }
 }
