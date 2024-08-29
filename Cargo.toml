@@ -1,6 +1,6 @@
 [package]
 name = "flamescope"
-version = "0.1.2"
+version = "0.1.3"
 description = "Export flame data to speedscopes profile format"
 authors = ["Noa <coolreader18@gmail.com>"]
 repository = "https://github.com/coolreader18/flamescope"
